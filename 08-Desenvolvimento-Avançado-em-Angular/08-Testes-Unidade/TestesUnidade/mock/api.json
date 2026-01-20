@@ -1,0 +1,132 @@
+{
+  "produtos": [
+    {
+      "id": 1,
+      "nome": "Galaxy S10+",
+      "ativo": true,
+      "valor": 100,
+      "imagem": "celular.jpg"
+    },
+    {
+      "id": 2,
+      "nome": "Go Pro 8",
+      "ativo": true,
+      "valor": 200,      
+      "imagem": "gopro.jpg"
+    },
+    {
+      "id": 3,
+      "nome": "Laptop Asus",
+      "ativo": true,
+      "valor": 300,      
+      "imagem": "laptop.jpg"
+    },
+    {
+      "id": 4,
+      "nome": "Mouse Microsoft",
+      "ativo": true,
+      "valor": 400,      
+      "imagem": "mouse.jpg"
+    },
+    {
+      "id": 5,
+      "nome": "Teclado Microsoft",
+      "ativo": true,
+      "valor": 500,      
+      "imagem": "teclado.jpg"
+    },
+    {
+      "id": 6,
+      "nome": "Headset Microsoft",
+      "valor": 600,
+      "ativo": true,      
+      "imagem": "headset.jpg"
+    },
+    {
+      "id": 7,
+      "nome": "Monitor Samsung",
+      "valor": 700,      
+      "ativo": true,
+      "imagem": "monitor.jpg"
+    },    
+    {
+      "id": 8,
+      "nome": "Webcam Logitech",
+      "valor": 800,     
+      "ativo": true,
+      "imagem": "webcam.jpg"
+    },
+    {
+      "id": 9,
+      "nome": "Mousepad Microsoft",
+      "valor": 900,      
+      "ativo": true,
+      "imagem": "mousepad.jpg"
+    }
+  ],
+
+  "posts": [
+    {
+      "id": "1",
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  
+  "todolist": [
+    {
+      "id": "1",
+      "nome": "Responder e-mails",
+      "finalizado": true,
+      "iniciado": false
+    },
+    {
+      "id": "2",
+      "nome": "Reunião com fornecedor",
+      "finalizado": true,
+      "iniciado": false
+    },
+    {
+      "id": "3",
+      "nome": "Finalizar curso de Angular",
+      "finalizado": false,
+      "iniciado": true
+    },
+    {
+      "id": "4",
+      "nome": "Publicar feedback no LinkedIn",
+      "finalizado": false,
+      "iniciado": false
+    },
+    {
+      "id": "5",
+      "nome": "Levar cachorro no veterinário",
+      "finalizado": false,
+      "iniciado": true
+    },
+    {
+      "id": "6",
+      "nome": "Ligar para Mãe",
+      "finalizado": false,
+      "iniciado": false
+    },
+    {
+      "id": "7",
+      "nome": "Comprar Café",
+      "finalizado": false,
+      "iniciado": true
+    },
+    {
+      "id": "8",
+      "nome": "Visitar desenvolvedor.io",
+      "finalizado": false,
+      "iniciado": false
+    },
+    {
+      "id": "270e",
+      "nome": "Escrever plano para 2026",
+      "finalizado": false,
+      "iniciado": true
+    }
+  ]
+}

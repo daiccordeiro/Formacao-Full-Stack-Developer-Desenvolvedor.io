@@ -1,0 +1,52 @@
+{
+  "name": "meu-projeto",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "mock": "json-server --watch mock/api.json --port 3000",
+    "dev": "concurrently \"npm run mock\" \"npm start\""
+  },
+  "private": true,
+  "dependencies": {
+    "@angular-devkit/build-angular": "19.2.18",
+    "@angular/animations": "19.2.18",
+    "@angular/common": "19.2.18",
+    "@angular/compiler": "19.2.18",
+    "@angular/core": "19.2.18",
+    "@angular/forms": "19.2.18",
+    "@angular/localize": "19.2.18",
+    "@angular/platform-browser": "19.2.18",
+    "@angular/platform-browser-dynamic": "19.2.18",
+    "@angular/router": "19.2.18",
+    "bootstrap": "^5.3.8",
+    "ngx-brazil": "^19.0.0",
+    "rxjs": "~7.8.0",
+    "zone.js": "~0.15.1"
+  },
+  "devDependencies": {
+    "@angular/build": "19.2.18",
+    "@angular/cli": "^19.2.16",
+    "@angular/compiler-cli": "19.2.18",
+    "@angular/language-service": "^19.2.15",
+    "@types/jasmine": "^5.1.13",
+    "@types/node": "^20.4.2",
+    "angular-eslint": "20.3.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.35.0",
+    "jasmine-core": "^5.13.0",
+    "json-server": "^1.0.0-beta.3",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "8.40.0"
+  }
+}
