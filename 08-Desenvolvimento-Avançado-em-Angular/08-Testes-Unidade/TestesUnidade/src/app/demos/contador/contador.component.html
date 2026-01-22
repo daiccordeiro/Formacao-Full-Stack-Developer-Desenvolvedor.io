@@ -1,0 +1,40 @@
+<div class="container main-container  mt-4">
+    <h1 class="mb-3">Contador</h1> 
+    
+    <div 
+        #contadorFocus       
+        class="contador-box d-inline-flex align-items-center gap-3 px-3 py-2 rounded border"
+        tabindex="0"  
+        (keydown)="onKeyDown($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+    >            
+        <span class="fs-4 fw-semibold">
+        {{ valor }}
+        </span>         
+            
+        <div class="btn-group">
+            <button 
+                tabindex="-1"
+                type="button" 
+                class="btn btn-sm btn-outline-primary"
+                (mousedown)="$event.preventDefault()"
+                (click)="incrementar()" 
+                [disabled]="valor === max"
+            >
+                +
+            </button>
+
+            <button 
+                tabindex="-1"
+                type="button" 
+                class="btn btn-sm btn-outline-secondary"
+                (mousedown)="$event.preventDefault()"
+                (click)="decrementar()" 
+                [disabled]="valor === min"
+            >
+                -
+            </button>
+        </div>  
+    </div>
+</div>

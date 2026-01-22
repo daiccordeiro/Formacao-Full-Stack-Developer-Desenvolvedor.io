@@ -1,0 +1,22 @@
+/* container */
+.contador-box {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  transition: none;
+}
+
+/* remove QUALQUER foco visual do container */
+.contador-box:focus,
+.contador-box:focus-visible,
+.contador-box:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #dee2e6 !important;
+}
+
+/* remove foco visual dos botões */
+.contador-box button:focus,
+.contador-box button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

@@ -15,6 +15,8 @@ import { TodoComponent } from './demos/todo-list/todo.component';
 import { TasksService } from './demos/todo-list/todo.service';
 import { Store } from './demos/todo-list/todo.store';
 
+import { ContadorComponent } from './demos/contador/contator.component';
+
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -39,6 +41,8 @@ export const routes: Routes = [
             import('./demos/arquitetura-componentes/produto.route')
             .then(m => m.PRODUTO_ROUTES)},  //Lazy Loading   
     
+    { path: 'contador', component: ContadorComponent},
+
     { path: 'admin', 
         loadChildren: () => 
             import('./admin/admin.routes')
