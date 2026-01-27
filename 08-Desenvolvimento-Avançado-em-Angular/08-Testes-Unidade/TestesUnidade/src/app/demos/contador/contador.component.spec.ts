@@ -1,8 +1,8 @@
-import { ContadorComponent } from './contator.component';
+import { ContadorComponent } from './contador.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 
-describe('ContatorComponent', () => {
+describe('ContadorComponent', () => {
 
     let component: ContadorComponent;
     let fixture: ComponentFixture<ContadorComponent>;

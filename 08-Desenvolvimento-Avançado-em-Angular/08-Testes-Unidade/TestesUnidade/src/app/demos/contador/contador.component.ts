@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'app-contator',  
+  selector: 'app-contador',  
   imports: [
     CommonModule
   ],

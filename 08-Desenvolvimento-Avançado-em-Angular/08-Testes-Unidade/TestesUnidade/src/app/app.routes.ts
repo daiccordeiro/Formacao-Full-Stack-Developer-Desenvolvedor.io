@@ -15,7 +15,7 @@ import { TodoComponent } from './demos/todo-list/todo.component';
 import { TasksService } from './demos/todo-list/todo.service';
 import { Store } from './demos/todo-list/todo.store';
 
-import { ContadorComponent } from './demos/contador/contator.component';
+import { ContadorComponent } from './demos/contador/contador.component';
 
 
 export const routes: Routes = [
