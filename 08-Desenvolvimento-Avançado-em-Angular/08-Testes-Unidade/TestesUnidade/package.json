@@ -7,7 +7,12 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
+    
+    "e2e": "playwright test",
+    "e2e:chrome": "playwright test --project=chromium",
+    "e2e:chrome:headed": "playwright test --project=chromium --headed",
+    "e2e:debug": "playwright test --project=chromium --debug",
+    
     "mock": "json-server --watch mock/api.json --port 3000",
     "dev": "concurrently \"npm run mock\" \"npm start\""
   },
@@ -33,6 +38,7 @@
     "@angular/cli": "^19.2.16",
     "@angular/compiler-cli": "19.2.18",
     "@angular/language-service": "^19.2.15",
+    "@playwright/test": "1.58.0",
     "@types/jasmine": "^5.1.13",
     "@types/node": "^20.4.2",
     "angular-eslint": "20.3.0",
@@ -45,6 +51,7 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "playwright-ng-schematics": "^2.0.3",
     "ts-node": "^10.9.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "8.40.0"

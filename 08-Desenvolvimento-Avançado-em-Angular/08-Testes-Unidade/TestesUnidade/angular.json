@@ -53,8 +53,8 @@
               {
                 "glob": "**/*",
                 "input": "public",
-                "output": "/"    
-              },              
+                "output": "/"
+              },
               "src/assets"
             ],
             "styles": [
@@ -136,7 +136,7 @@
                 "glob": "**/*",
                 "input": "public",
                 "output": "/"
-              },              
+              },
               "src/assets"
             ],
             "styles": [
@@ -144,6 +144,17 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": []
+          }
+        },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "devServerTarget": "MeuProjeto:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "MeuProjeto:serve:production"
+            }
           }
         }
       }
