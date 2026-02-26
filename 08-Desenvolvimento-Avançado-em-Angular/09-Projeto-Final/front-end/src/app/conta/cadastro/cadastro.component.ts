@@ -109,7 +109,7 @@ export class CadastroComponent implements OnInit, AfterViewInit {
     this.cadastroForm.reset();
     this.errors = [];
 
-    //this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
+    this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
 
     this.snackBar.open(
       'Registro realizado com Sucesso! Bem-vindo!',
