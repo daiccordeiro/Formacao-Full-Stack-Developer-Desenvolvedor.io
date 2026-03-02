@@ -1,3 +1,6 @@
+import { Injectable } from "@angular/core";
+
+
 export interface UsuarioToken {
   id: string;
   email: string;
@@ -9,6 +12,9 @@ export interface UsuarioResponse {
   userToken: UsuarioToken;
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 export class LocalStorageUtils {
   private readonly TOKEN_KEY = 'devio.token';
   private readonly USER_KEY = 'devio.user';

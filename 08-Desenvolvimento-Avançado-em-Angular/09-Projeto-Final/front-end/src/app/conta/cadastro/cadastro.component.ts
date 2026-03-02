@@ -3,7 +3,7 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren } from '@ang
 import { FormControl, FormGroup, FormBuilder, FormControlName, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { fromEvent, merge, Observable } from 'rxjs';
 
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 import { Router } from '@angular/router';
 
@@ -44,7 +44,7 @@ export class CadastroComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private contaService: ContaService,
     private router: Router,
-    private snackBar: MatSnackBar) {
+    private toastr: ToastrService) {
 
     this.validationMessages = {
       email: {
@@ -109,13 +109,19 @@ export class CadastroComponent implements OnInit, AfterViewInit {
     this.cadastroForm.reset();
     this.errors = [];
 
-    this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
+    //this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
+    this.contaService.salvarUsuarioLocal(response);
 
-    this.snackBar.open(
-      'Registro realizado com Sucesso! Bem-vindo!',
-      'Fechar',
-      { duration: 3000 }
-    ).afterDismissed().subscribe(() => {
+    const toast = this.toastr.success(
+      'Registro realizado com Sucesso!',
+      'Bem-vindo!',
+      {
+        progressBar: true,
+        closeButton: true
+      }
+    );
+
+    toast?.onHidden.subscribe(() => {
       this.router.navigate(['/home']);
     });
   }
@@ -123,10 +129,13 @@ export class CadastroComponent implements OnInit, AfterViewInit {
   processarFalha(fail: any): void {
     this.errors = fail.error?.errors ?? [],
 
-    this.snackBar.open(
-      'Ocorreu um erro!',
-      'Fechar',
-      { duration: 4000 }
+     this.toastr.error(
+      'Ocorreu um erro ao processar a solicitação.',
+      'Erro',
+      {
+        progressBar: true,
+        closeButton: true
+      }
     );
   }
 }

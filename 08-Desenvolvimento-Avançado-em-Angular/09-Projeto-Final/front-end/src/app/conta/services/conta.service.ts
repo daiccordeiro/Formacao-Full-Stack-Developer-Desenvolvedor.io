@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from "@angular/common/http";
+import { LocalStorageUtils, UsuarioResponse } from '../../utils/localstorage';
 
 import { Usuario } from "../models/usuario";
 import { BaseService } from "../../services/base.service";
@@ -12,6 +13,10 @@ import { BaseService } from "../../services/base.service";
 })
 export class ContaService extends BaseService {
   private http = inject(HttpClient);
+
+  constructor(localStorage: LocalStorageUtils) {
+    super(localStorage);
+  }
 
   cadastrarUsuario(usuario: Usuario): Observable<Usuario> {
     return this.http
@@ -38,4 +43,8 @@ export class ContaService extends BaseService {
         catchError(error => this.serviceError(error))
       );
   }
+
+  salvarUsuarioLocal(response: UsuarioResponse): void {
+  this.LocalStorage.salvarDadosLocaisUsuario(response);
+}
 }

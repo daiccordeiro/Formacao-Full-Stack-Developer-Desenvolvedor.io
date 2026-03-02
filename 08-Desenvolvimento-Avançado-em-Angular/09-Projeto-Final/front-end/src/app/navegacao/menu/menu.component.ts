@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterLink } from "@angular/router";
+//import { RouterLink } from "@angular/router";
+import { MenuLoginComponent } from "../menu-login/menu-login.component";
 
 
 @Component({
@@ -10,7 +11,8 @@ import { RouterLink } from "@angular/router";
     imports: [
     CommonModule,
     NgbCollapseModule,
-    RouterLink
+    //RouterLink,
+    MenuLoginComponent
 ],
     templateUrl: './menu.component.html',
 })

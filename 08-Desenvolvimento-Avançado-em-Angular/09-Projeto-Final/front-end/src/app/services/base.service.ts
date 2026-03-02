@@ -5,7 +5,13 @@ import { LocalStorageUtils } from '../utils/localstorage';
 
 
 export abstract class BaseService {
-  public LocalStorage = new LocalStorageUtils();
+  //public LocalStorage = new LocalStorageUtils();
+  protected LocalStorage: LocalStorageUtils;
+
+  constructor(localStorage: LocalStorageUtils) {
+    this.LocalStorage = localStorage;
+  }
+  
   protected UrlServiceV1: string = environment.apiUrlv1
 
   protected ObterHeaderJson() {
