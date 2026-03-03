@@ -45,6 +45,6 @@ export class ContaService extends BaseService {
   }
 
   salvarUsuarioLocal(response: UsuarioResponse): void {
-  this.LocalStorage.salvarDadosLocaisUsuario(response);
-}
+    this.LocalStorage.salvarDadosLocaisUsuario(response);
+  }
 }
