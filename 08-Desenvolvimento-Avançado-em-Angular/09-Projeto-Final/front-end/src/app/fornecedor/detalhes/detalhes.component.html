@@ -1,0 +1,42 @@
+<div class="container main-container">
+
+  @if (fornecedor$ | async; as fornecedor) {
+    <h1>Detalhes do {{ fornecedor.nome }}</h1>
+
+    <div>
+      <h4>Informação somente leitura</h4>
+      <hr />
+
+      <dl class="row">
+        <dt class="col-sm-2">
+          <label class="control-label">Nome</label>
+        </dt>
+        <dd class="col-sm-10">{{ fornecedor.nome }}</dd>
+
+        <dt class="col-sm-2">
+          <label class="control-label">Documento</label>
+        </dt>
+        <dd class="col-sm-10">{{ fornecedor.documento }}</dd>
+
+        <dt class="col-sm-2">
+          <label class="control-label">Ativo</label>
+        </dt>
+        <dd class="col-sm-10">
+          <input type="checkbox" class="check-box" [checked]="fornecedor.ativo" disabled>
+        </dd>
+
+      </dl>
+    </div>
+
+    <div>
+      <a class="btn btn-dark" [routerLink]="['/fornecedores/editar', fornecedor.id]">Editar</a>
+
+      <a class="btn btn-info" [routerLink]="['/fornecedores/listar-todos']">Voltar</a>
+    </div>
+
+  } @else {
+    <div class="alert alert-secondary">
+      Carregando Fornecedores...
+    </div>
+  }
+</div>

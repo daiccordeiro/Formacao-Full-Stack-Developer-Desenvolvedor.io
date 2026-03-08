@@ -2,10 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from "@angular/common/http";
-import { LocalStorageUtils, UsuarioResponse } from '../../utils/localstorage';
+
+import { UsuarioResponse } from '../../utils/localstorage';
+import { BaseService } from "../../services/base.service";
 
 import { Usuario } from "../models/usuario";
-import { BaseService } from "../../services/base.service";
 
 
 @Injectable({
@@ -14,33 +15,37 @@ import { BaseService } from "../../services/base.service";
 export class ContaService extends BaseService {
   private http = inject(HttpClient);
 
-  constructor(localStorage: LocalStorageUtils) {
-    super(localStorage);
-  }
-
   cadastrarUsuario(usuario: Usuario): Observable<Usuario> {
     return this.http
-      .post<Usuario>(
+      .post<any>(
         `${this.UrlServiceV1}nova-conta`,
         usuario,
         this.ObterHeaderJson()
       )
-      .pipe(
+      /*.pipe(
         map(response => this.extractData<Usuario>(response)),
         catchError(error => this.serviceError(error))
+      );*/
+      .pipe(
+        map(this.extractData<Usuario>),
+        catchError(this.serviceError)
       );
   }
 
   login(usuario: Usuario): Observable<Usuario> {
     return this.http
-      .post<Usuario>(
+      .post<any>(
         `${this.UrlServiceV1}entrar`,
         usuario,
         this.ObterHeaderJson()
       )
-      .pipe(
+      /*.pipe(
         map(response => this.extractData<Usuario>(response)),
         catchError(error => this.serviceError(error))
+      );*/
+      .pipe(
+        map(this.extractData<Usuario>),
+        catchError(this.serviceError)
       );
   }
 

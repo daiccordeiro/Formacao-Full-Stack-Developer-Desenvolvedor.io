@@ -14,6 +14,11 @@ export const routes: Routes = [
           import('./conta/conta.route').then(m => m.CONTA_ROUTES)
     }, //Lazy Loading
 
+    { path: 'fornecedores',
+        loadChildren: () =>
+          import('./fornecedor/fornecedor.route').then(m => m.FORNECEDOR_ROUTES)
+    }, //Lazy Loading
+
     { path: 'nao-encontrado', component: NotFoundComponent },
     { path: '**', component: NotFoundComponent },
 ];
