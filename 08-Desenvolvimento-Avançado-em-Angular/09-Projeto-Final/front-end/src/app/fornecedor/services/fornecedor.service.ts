@@ -5,7 +5,7 @@ import { catchError, delay, map } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
 import { BaseService } from "../../services/base.service";
-import { CepConsulta } from "../models/endereco";
+import { CepConsulta, Endereco } from "../models/endereco";
 import { Fornecedor } from '../models/fornecedor';
 
 
@@ -22,14 +22,14 @@ export class FornecedorService extends BaseService {
       .get<Fornecedor[]>(
         `${this.UrlServiceV1}fornecedores`)
       .pipe(
-        catchError(super.serviceError)
+        catchError(this.serviceError)
       );
   }
 
   obterPorId(id: string | number): Observable<Fornecedor> {
     return this.http
       .get<Fornecedor>(
-        `${this.UrlServiceV1}fornecedores/${id}`)
+        `${this.UrlServiceV1}fornecedores/${id}`, this.ObterAuthHeaderJson())
       .pipe(
         catchError(this.serviceError)
       );
@@ -38,8 +38,7 @@ export class FornecedorService extends BaseService {
   novoFornecedor(fornecedor: Fornecedor): Observable<Fornecedor> {
    return this.http
       .post<Fornecedor>(
-        `${this.UrlServiceV1}fornecedores`,
-        fornecedor, this.ObterAuthHeaderJson())
+        `${this.UrlServiceV1}fornecedores`, fornecedor, this.ObterAuthHeaderJson())
       .pipe(
         catchError(this.serviceError)
       );
@@ -48,7 +47,7 @@ export class FornecedorService extends BaseService {
   atualizarFornecedor(fornecedor: Fornecedor): Observable<Fornecedor> {
     return this.http
       .put<Fornecedor>(
-        `${this.UrlServiceV1}fornecedores/${fornecedor.id}`, fornecedor)
+        `${this.UrlServiceV1}fornecedores/${fornecedor.id}`, fornecedor, this.ObterAuthHeaderJson())
       .pipe(
         catchError(this.serviceError)
       );
@@ -57,11 +56,20 @@ export class FornecedorService extends BaseService {
   excluirFornecedor(id: string | number): Observable<void> {
     return this.http
       .delete<void>(
-        `${this.UrlServiceV1}fornecedores/${id}`)
+        `${this.UrlServiceV1}fornecedores/${id}`, this.ObterAuthHeaderJson())
       .pipe(
-        catchError(super.serviceError)
+        catchError(this.serviceError)
       );
    }
+
+  atualizarEndereco(endereco: Endereco): Observable<Endereco> {
+    return this.http
+      .put<Endereco>(
+        `${this.UrlServiceV1}fornecedores/endereco/${endereco.id}`, endereco, this.ObterAuthHeaderJson())
+      .pipe(
+        catchError(this.serviceError)
+      );
+  }
 
   consultarCep(cep:string): Observable<CepConsulta> {
     return this.http
