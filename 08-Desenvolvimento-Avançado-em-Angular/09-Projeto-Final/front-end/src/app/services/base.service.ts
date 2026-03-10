@@ -1,17 +1,12 @@
 import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LocalStorageUtils } from '../utils/localstorage';
 
 
 export abstract class BaseService {
-  //public LocalStorage = new LocalStorageUtils();
-  protected LocalStorage: LocalStorageUtils;
-
-  constructor(localStorage: LocalStorageUtils) {
-    this.LocalStorage = localStorage;
-  }
-  
+  protected LocalStorage = inject(LocalStorageUtils);
   protected UrlServiceV1: string = environment.apiUrlv1
 
   protected ObterHeaderJson() {
@@ -23,10 +18,12 @@ export abstract class BaseService {
   }
 
   protected ObterAuthHeaderJson() {
+    const token = this.LocalStorage.obterTokenUsuario();
+
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.LocalStorage.obterTokenUsuario()}`
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
       })
     };
   }
@@ -36,8 +33,8 @@ export abstract class BaseService {
   }
 
   protected serviceError(response: HttpErrorResponse) {
-    let customError: string[] = [];
-    let customResponse = { error: { errors: [] as string[] } };
+    const customError: string[] = [];
+    const customResponse = { error: { errors: [] as string[] } };
 
     if (response.status === 0) {
       customError.push('Erro de conexão com o servidor.');

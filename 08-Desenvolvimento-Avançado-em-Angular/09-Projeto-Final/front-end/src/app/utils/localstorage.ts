@@ -19,12 +19,13 @@ export class LocalStorageUtils {
   private readonly TOKEN_KEY = 'devio.token';
   private readonly USER_KEY = 'devio.user';
 
-
   private get storage(): Storage | null {
-    return typeof window !== 'undefined' ? localStorage : null;
+    return typeof window !== 'undefined' && window.localStorage
+      ? window.localStorage
+      : null;
   }
 
-  public obterUsuario<T = any>(): T | null {
+  public obterUsuario<T = UsuarioToken>(): T | null {
     const user = this.storage?.getItem(this.USER_KEY);
     return user ? JSON.parse(user) as T : null;
   }
