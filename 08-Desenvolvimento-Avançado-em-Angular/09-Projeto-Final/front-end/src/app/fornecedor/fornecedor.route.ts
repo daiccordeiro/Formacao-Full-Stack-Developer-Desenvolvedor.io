@@ -17,13 +17,13 @@ export const FORNECEDOR_ROUTES: Routes = [
           { path: 'listar-todos', component: ListaComponent },
           { path: 'adicionar-novo', component: NovoComponent },
           { path: 'editar/:id', component: EditarComponent,
-            resolve:{ fornecedor: FornecedorResolve }
+            resolve: { fornecedor: FornecedorResolve }
           },
           { path: 'detalhes/:id', component: DetalhesComponent,
-             resolve:{ fornecedor: FornecedorResolve }
+             resolve: { fornecedor: FornecedorResolve }
           },
           { path: 'excluir/:id', component: ExcluirComponent,
-             resolve:{ fornecedor: FornecedorResolve }
+             resolve: { fornecedor: FornecedorResolve }
           }
         ]
     }

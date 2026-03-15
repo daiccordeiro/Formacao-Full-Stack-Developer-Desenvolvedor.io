@@ -23,6 +23,8 @@
     "@angular/router": "^20.3.16",
     "@ng-bootstrap/ng-bootstrap": "^19.0.1",
     "bootstrap": "^5.3.8",
+    "ngx-brazil": "^20.1.1",
+    "ngx-spinner": "^21.0.0",
     "ngx-toastr": "^19.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

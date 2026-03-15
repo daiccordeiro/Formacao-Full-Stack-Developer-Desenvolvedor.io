@@ -21,7 +21,7 @@ import { Fornecedor } from '../models/fornecedor';
   templateUrl: './excluir.component.html'
 })
 export class ExcluirComponent implements OnInit {
-  fornecedor: Fornecedor | null = null;
+  fornecedor!: Fornecedor;
 
   private fornecedorService = inject(FornecedorService);
   private router = inject(Router);
@@ -29,24 +29,15 @@ export class ExcluirComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    //const id = this.route.snapshot.paramMap.get('id');
+    this.fornecedor = this.route.snapshot.data['fornecedor'];
 
-    if (!id) {
+    if (!this.fornecedor) {
       this.router.navigate(['/fornecedores/listar-todos']);
-      return;
     }
-
-    this.fornecedorService
-      .obterPorId(id)
-      .subscribe({
-        next: fornecedor => this.fornecedor = fornecedor,
-        error: () => this.falha()
-      });
   }
 
   excluirEvento(): void {
-    if (!this.fornecedor) return;
-
     this.fornecedorService
       .excluirFornecedor(this.fornecedor.id)
       .subscribe({

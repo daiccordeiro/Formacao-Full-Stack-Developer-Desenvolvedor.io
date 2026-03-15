@@ -6,7 +6,9 @@ import { Fornecedor } from '../models/fornecedor';
 import { FornecedorService } from './fornecedor.service';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FornecedorResolve implements Resolve<Fornecedor> {
 
   constructor(private fornecedorService: FornecedorService) { }

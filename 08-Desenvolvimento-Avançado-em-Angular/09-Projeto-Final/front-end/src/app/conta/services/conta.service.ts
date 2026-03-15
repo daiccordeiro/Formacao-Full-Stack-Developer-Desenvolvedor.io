@@ -22,29 +22,21 @@ export class ContaService extends BaseService {
         usuario,
         this.ObterHeaderJson()
       )
-      /*.pipe(
-        map(response => this.extractData<Usuario>(response)),
-        catchError(error => this.serviceError(error))
-      );*/
       .pipe(
         map(this.extractData<Usuario>),
         catchError(this.serviceError)
       );
   }
 
-  login(usuario: Usuario): Observable<Usuario> {
+  login(usuario: Usuario): Observable<UsuarioResponse> {
     return this.http
       .post<any>(
         `${this.UrlServiceV1}entrar`,
         usuario,
         this.ObterHeaderJson()
       )
-      /*.pipe(
-        map(response => this.extractData<Usuario>(response)),
-        catchError(error => this.serviceError(error))
-      );*/
       .pipe(
-        map(this.extractData<Usuario>),
+        map(this.extractData<UsuarioResponse>),
         catchError(this.serviceError)
       );
   }

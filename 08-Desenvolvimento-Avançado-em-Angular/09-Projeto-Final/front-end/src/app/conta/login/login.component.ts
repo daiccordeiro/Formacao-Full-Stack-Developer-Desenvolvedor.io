@@ -12,6 +12,7 @@ import { CustomValidators } from '../../utils/custom-validators';
 
 import { Usuario } from '../models/usuario';
 import { ContaService } from '../services/conta.service';
+import { UsuarioResponse } from '../../utils/localstorage';
 
 
 @Component({
@@ -86,26 +87,22 @@ export class LoginComponent implements OnInit {
       };
 
       this.contaService.login(this.usuario).subscribe({
-        next: sucesso => this.processarSucesso(sucesso),
+        next: (sucesso: UsuarioResponse) => this.processarSucesso(sucesso),
         error: falha => this.processarFalha(falha)
       });
     }
   }
 
-  processarSucesso(response: any): void {
+  processarSucesso(response: UsuarioResponse): void {
     this.loginForm.reset();
     this.errors = [];
 
-    //this.contaService.LocalStorage.salvarDadosLocaisUsuario(response);
     this.contaService.salvarUsuarioLocal(response);
 
     const toast = this.toastr.success(
       'Login realizado com Sucesso!',
       'Bem-vindo!',
-      {
-        progressBar: true,
-        closeButton: true
-      }
+      { progressBar: true, closeButton: true }
     );
 
     toast?.onHidden.subscribe(() => {
@@ -119,10 +116,7 @@ export class LoginComponent implements OnInit {
      this.toastr.error(
       'Ocorreu um erro ao processar a solicitação.',
       'Erro',
-      {
-        progressBar: true,
-        closeButton: true
-      }
+      { progressBar: true, closeButton: true }
     );
   }
 }
