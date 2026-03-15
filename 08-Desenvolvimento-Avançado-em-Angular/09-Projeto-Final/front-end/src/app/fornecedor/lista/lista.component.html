@@ -1,63 +1,83 @@
-<div class="container main-container">
+<div class="container main-container mt-4">
 
-  <h1>Lista de Fornecedores</h1>
-  <p>
-    <a class="btn btn-info" [routerLink]="['/fornecedores/adicionar-novo']">
-      Novo Fornecedor
-    </a>
-  </p>
+  <div class="card shadow-sm">
 
-  @if (fornecedores$ | async; as fornecedores) {
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Lista de Fornecedores</h4>
 
-    @if (fornecedores.length > 0) {
-      <table class="table table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th>Nome</th>
-            <th>Documento</th>
-            <th>Ativo</th>
-            <th></th>
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (fornecedor of fornecedores; track fornecedor.id) {
-
-            <tr>
-              <td>{{ fornecedor.nome }}</td>
-              <td>{{ fornecedor.documento }}</td>
-
-              <td>
-                <input type="checkbox" class="check-box" [checked]="fornecedor.ativo" disabled>
-              </td>
-
-              <td class="text-right">
-                <a class="btn btn-info" [routerLink]="['/fornecedores/detalhes',fornecedor.id]">
-                    <span class="fa fa-search"></span>
-                  </a>
-
-                <a class="btn btn-warning" [routerLink]="['/fornecedores/editar',fornecedor.id]">
-                  <span class="fa fa-pencil-alt"></span>
-                  </a>
-                <a class="btn btn-danger" [routerLink]="['/fornecedores/excluir',fornecedor.id]">
-                  <span class="fa fa-trash"></span>
-                </a>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-
-    } @else {
-      <div class="alert alert-info">
-        Nenhum fornecedor cadastrado.
-      </div>
-    }
-
-  } @else {
-    <div class="alert alert-secondary">
-      Carregando Fornecedores...
+      <a class="btn btn-light btn-sm" [routerLink]="['/fornecedores/adicionar-novo']">
+        <i class="fas fa-plus me-1"></i>
+          Novo Fornecedor
+      </a>
     </div>
-  }
+
+    <div class="card-body">
+      @if (fornecedores$ | async; as fornecedores) {
+
+        @if (fornecedores.length > 0) {
+
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Nome</th>
+                <th>Documento</th>
+                <th class="text-center">Ativo</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (fornecedor of fornecedores; track fornecedor.id) {
+
+                <tr>
+                  <td class="fw-semibold">{{ fornecedor.nome }}</td>
+                  <td>{{ fornecedor.documento }}</td>
+
+                  <td class="text-center">
+                    @if (fornecedor.ativo) {
+                      <span class="badge bg-success">Ativo</span>
+                    } @else {
+                      <span class="badge bg-secondary">Inativo</span>
+                    }
+                  </td>
+
+                   <td class="text-end">
+                    <div class="btn-group">
+                      <a class="btn btn-outline-secondary btn-sm"
+                        [routerLink]="['/fornecedores/detalhes', fornecedor.id]" title="Detalhes">
+                        <i class="fas fa-search"></i>
+                      </a>
+
+                      <a class="btn btn-outline-danger btn-sm"
+                       [routerLink]="['/fornecedores/editar', fornecedor.id]" title="Editar">
+                        <i class="fas fa-edit"></i>
+                      </a>
+
+                      <a class="btn btn-danger btn-sm"
+                        [routerLink]="['/fornecedores/excluir', fornecedor.id]" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
+        } @else {
+          <div class="alert alert-secondary">
+            Nenhum fornecedor cadastrado.
+          </div>
+        }
+
+      } @else {
+        <div class="text-center p-4">
+          <div class="spinner-border text-danger"></div>
+          <p class="mt-2">Carregando fornecedores...</p>
+        </div>
+      }
+
+    </div>
+  </div>
 
 </div>
