@@ -1,6 +1,7 @@
 <div class="container main-container">
 
-  @if (fornecedor){
+  @if (fornecedor$ | async; as fornecedor) {
+
     <div class="card shadow-sm mb-4">
       <div class="card-header bg-danger text-white">
         <h4 class="mb-0">
@@ -19,11 +20,14 @@
           <dd class="col-sm-9">{{ fornecedor.nome }}</dd>
 
           <dt class="col-sm-3 fw-semibold">Documento</dt>
-          <dd class="col-sm-9">{{ fornecedor.documento }}</dd>
+          <dd class="col-sm-9">
+            {{ fornecedor.tipoFornecedor === 1
+              ? (fornecedor.documento | cpf)
+              : (fornecedor.documento | cnpj) }}
+          </dd>
 
           <dt class="col-sm-3 fw-semibold">Ativo</dt>
           <dd class="col-sm-9">
-
             @if (fornecedor.ativo) {
               <span class="badge bg-success">Ativo</span>
             } @else {
@@ -34,8 +38,21 @@
       </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Localização</h5>
+      </div>
+
+      <div class="card-body p-0">
+        <iframe width="100%" height="350" frameborder="0" style="border:0"
+          [src]="enderecoMap$ | async" allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
     <div class="d-flex gap-2">
-      <button class="btn btn-danger" (click)="excluirEvento()">
+      <button class="btn btn-danger" (click)="excluirEvento(fornecedor)">
         <i class="fas fa-trash me-1"></i>
           Excluir
       </button>
@@ -48,9 +65,8 @@
     </div>
 
   } @else {
-
     <div class="alert alert-secondary">
-      Carregando fornecedor...
+      Carregando Fornecedores...
     </div>
   }
 </div>
