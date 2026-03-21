@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChildren, ElementRef, inject, QueryList, DestroyRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControlName, AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable, fromEvent, map, merge, switchMap } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -10,13 +10,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
-import { Fornecedor } from '../models/fornecedor';
-import { CepConsulta, Endereco } from '../models/endereco';
-import { FornecedorService } from '../services/fornecedor.service';
-
-import { DisplayMessage, GenericValidator, ValidationMessages } from '../../utils/generic-form-validation';
 import { NgxBrazil, NgxBrazilMASKS, NgxBrazilValidators } from 'ngx-brazil';
+
 import { StringUtils } from '../../utils/string-utils';
+import { DisplayMessage, GenericValidator, ValidationMessages } from '../../utils/generic-form-validation';
+
+import { Fornecedor } from '../models/fornecedor';
+import { FornecedorService } from '../services/fornecedor.service';
+import { CepConsulta, Endereco } from '../models/endereco';
+
 
 @Component({
   selector: 'app-editar',
@@ -37,9 +39,9 @@ export class EditarComponent implements OnInit, AfterViewInit  {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   private route = inject(ActivatedRoute);
-  private destroyRef = inject(DestroyRef);
   private modalService = inject(NgbModal);
   private spinner = inject(NgxSpinnerService);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChildren(FormControlName, { read: ElementRef })
     formInputElements!: QueryList<ElementRef>;
@@ -48,7 +50,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
   enderecoForm!: FormGroup;
 
   fornecedor = {} as Fornecedor;
-  endereco = {} as Endereco;
+  //endereco = {} as Endereco;
 
   errors: any[] = [];
   errorsEndereco: any[] = [];
@@ -78,35 +80,40 @@ export class EditarComponent implements OnInit, AfterViewInit  {
 
 
   ngOnInit(): void {
+    this.spinner.show();
+
     this.criarForm();
 
     const fornecedor = this.route.snapshot.data['fornecedor'];
-    if (fornecedor){
+
+    if (fornecedor) {
       this.fornecedor = fornecedor;
-      this.tipoFornecedor = this.fornecedor.tipoFornecedor;
 
-      this.fornecedorForm.patchValue(this.fornecedor);
-
-      if (fornecedor.endereco){
-        this.enderecoForm.patchValue(fornecedor.endereco);
-      }
+      this.fornecedor.endereco = this.fornecedor.endereco ?? {} as Endereco;
       this.preencherForm();
+
+      // Sincroniza mudanças do form de endereço com o objeto
+      this.enderecoForm.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(value => {
+          Object.assign(this.fornecedor.endereco, value);
+        });
     }
+
+    this.spinner.hide();
   }
 
   private criarForm(): void {
-    this.spinner.show();
-
     this.fornecedorForm = this.fb.group({
-      id: '',
+      id: [''],
       nome: ['', [Validators.required]],
-      documento: '',
+      documento: [''],
       ativo: ['', [Validators.required]],
       tipoFornecedor: ['', [Validators.required]],
     });
 
     this.enderecoForm = this.fb.group({
-        id: '',
+        id: [''],
         logradouro: ['', [Validators.required]],
         numero: ['', [Validators.required]],
         complemento: [''],
@@ -114,44 +121,33 @@ export class EditarComponent implements OnInit, AfterViewInit  {
         cep: ['', [Validators.required, NgxBrazilValidators.cep]],
         cidade: ['', [Validators.required]],
         estado: ['', [Validators.required]],
-        fornecedorId: ''
+        fornecedorId: ['']
     });
-    setTimeout(() => {this.spinner.hide();}, 1000);
   }
 
   private preencherForm(): void {
-    this.fornecedorForm.setValue({
-      id: this.fornecedor.id,
-      nome: this.fornecedor.nome,
-      ativo: this.fornecedor.ativo,
-      tipoFornecedor: this.fornecedor.tipoFornecedor.toString(),
-      documento: this.fornecedor.documento
+    const fornecedor = this.fornecedor;
+    if (!fornecedor) return;
+
+    this.fornecedorForm.patchValue({
+      ...fornecedor
     });
 
-    if (this.tipoFornecedorForm.value === 1) {
-      this.documento.setValidators([Validators.required, NgxBrazilValidators.cpf]);
-    }
-    else {
-      this.documento.setValidators([Validators.required, NgxBrazilValidators.cnpj]);
-    }
+    this.trocarValidacaoDocumento(fornecedor.tipoFornecedor);
 
-    this.enderecoForm.setValue({
-      id: this.fornecedor.endereco.id,
-      logradouro: this.fornecedor.endereco.logradouro,
-      numero: this.fornecedor.endereco.numero,
-      complemento: this.fornecedor.endereco.complemento,
-      bairro: this.fornecedor.endereco.bairro,
-      cep: this.fornecedor.endereco.cep,
-      cidade: this.fornecedor.endereco.cidade,
-      estado: this.fornecedor.endereco.estado
-    });
+    if (fornecedor.endereco){
+      this.enderecoForm.patchValue({
+        ...fornecedor.endereco,
+        fornecedorId: fornecedor.id
+      });
+    }
   }
 
   ngAfterViewInit(): void {
     this.tipoFornecedorForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.trocarValidacaoDocumento();
+      .subscribe(tipo => {
+        this.trocarValidacaoDocumento(tipo);
         this.validarFormulario();
       });
     this.configurarElementosValidacao();
@@ -162,10 +158,8 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     const controlBlurs = this.formInputElements
     .toArray()
     .map((formControl: ElementRef) =>
-      merge(
-        fromEvent(formControl.nativeElement, 'blur'),
-        fromEvent(formControl.nativeElement, 'change')
-      ));
+      fromEvent(formControl.nativeElement, 'blur')
+      );
 
     // Evento disparado toda vez que 'perco' o foco do controle do formulário
     merge(...controlBlurs)
@@ -176,35 +170,34 @@ export class EditarComponent implements OnInit, AfterViewInit  {
   }
 
   validarFormulario(): void {
+    const fornecedorMsg = this.genericValidator.processarMensagens(this.fornecedorForm);
+    const enderecoMsg = this.genericValidator.processarMensagens(this.enderecoForm);
+
     this.displayMessage = {
-      ...this.genericValidator.processarMensagens(this.fornecedorForm),
-      ...this.genericValidator.processarMensagens(this.fornecedorForm.get('endereco') as FormGroup)
+      ...fornecedorMsg,
+      ...enderecoMsg
     };
-    this.mudancasNaoSalvas = true;
+    this.mudancasNaoSalvas = this.fornecedorForm.dirty || this.enderecoForm.dirty;
   }
 
-  trocarValidacaoDocumento() {
-    if (this.tipoFornecedorForm.value === 1) {
+  trocarValidacaoDocumento(tipo: number | string): void {
+    const tipoNumero = Number(tipo);
+    const control = this.documento;
 
-      this.documento.clearValidators();
-      this.documento.setValidators([
-        Validators.required,
-        NgxBrazilValidators.cpf
-      ]);
+    control.clearValidators();
 
-      this.textoDocumento = "CPF (requerido)";
+    control.setValidators([
+      Validators.required,
+      tipoNumero === 1
+        ? NgxBrazilValidators.cpf
+        : NgxBrazilValidators.cnpj
+    ]);
 
-    } else {
+    control.updateValueAndValidity();
 
-      this.documento.clearValidators();
-      this.documento.setValidators([
-        Validators.required,
-        NgxBrazilValidators.cnpj
-      ]);
-
-      this.textoDocumento = "CNPJ (requerido)";
-    }
-    this.documento.updateValueAndValidity();
+    this.textoDocumento = tipoNumero === 1
+      ? 'CPF (requerido)'
+      : 'CNPJ (requerido)';
   }
 
   get tipoFornecedorForm(): AbstractControl {
@@ -220,15 +213,25 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     cep = StringUtils.somenteNumeros(cep);
 
     if (cep.length !== 8) {
-      this.errors.push('CEP Inválido');
+      this.errors = ['CEP Inválido'];
       return;
     }
+
+    this.errors = [];
+
+    this.spinner.show();
 
     this.fornecedorService.consultarCep(cep)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (cepRetorno) => this.preencherEnderecoConsulta(cepRetorno),
-        error: (erro) => this.errors.push(erro)
+        next: (cepRetorno) => {
+          this.spinner.hide();
+          this.preencherEnderecoConsulta(cepRetorno);
+        },
+        error: (erro) => {
+          this.spinner.hide();
+          this.errors = erro?.error?.errors ?? [erro];
+        }
       });
   }
 
@@ -243,27 +246,35 @@ export class EditarComponent implements OnInit, AfterViewInit  {
   }
 
 
+  //Fornecedor
   editarFornecedor(): void {
-    // Só processar o formulário se ele foi alterado (dirty) e é válido (valid)
-    if (!this.fornecedorForm.dirty || !this.fornecedorForm.valid) return;
-      const fornecedorAtualizado: Fornecedor = this.fornecedorForm.value;
+    if (!this.fornecedorForm.dirty || this.fornecedorForm.invalid) return;
 
-      fornecedorAtualizado.endereco.cep = StringUtils.somenteNumeros(fornecedorAtualizado.endereco.cep);
-      fornecedorAtualizado.documento = StringUtils.somenteNumeros(fornecedorAtualizado.documento);
+    this.spinner.show();
 
-      this.fornecedorService.atualizarFornecedor(fornecedorAtualizado)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: sucesso => {
-            this.mudancasNaoSalvas = false;
-            this.processarSucesso(sucesso);
-          },
-        error: falha => this.processarFalha(falha)
-      });
+    Object.assign(this.fornecedor, this.fornecedorForm.getRawValue());
+    this.fornecedor.documento = StringUtils.somenteNumeros(this.fornecedor.documento);
+
+    Object.assign(this.fornecedor.endereco, this.enderecoForm.getRawValue());
+    this.fornecedor.endereco.cep = StringUtils.somenteNumeros(this.fornecedor.endereco.cep);
+    this.fornecedor.endereco.fornecedorId = this.fornecedor.id;
+
+    this.fornecedorService.atualizarFornecedor(this.fornecedor)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: sucesso => {
+          this.spinner.hide();
+          this.mudancasNaoSalvas = false;
+          this.processarSucesso(sucesso);
+        },
+      error: falha => {
+        this.spinner.hide();
+        this.processarFalha(falha);
+      }
+    });
   }
 
   processarSucesso(response: any): void {
-    this.fornecedorForm.reset();
     this.errors = [];
 
     const toast = this.toastr.success(
@@ -287,27 +298,35 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     );
   }
 
+
+  //Endereço
   editarEndereco(): void {
-    // Só processar o formulário se ele foi alterado (dirty) e é válido (valid)
-    if (!this.enderecoForm.dirty || !this.enderecoForm.valid) return;
-      const enderecoNovo: Endereco = this.enderecoForm.value;
+    if (!this.enderecoForm.dirty || this.enderecoForm.invalid) return;
 
-      enderecoNovo.cep = StringUtils.somenteNumeros(enderecoNovo.cep);
-      enderecoNovo.fornecedorId = this.fornecedor.id;
+    this.spinner.show();
 
-      this.fornecedorService.atualizarEndereco(enderecoNovo)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: sucesso => {
-            this.mudancasNaoSalvas = false;
-            this.processarSucessoEndereco(sucesso);
-          },
-          error: falha => this.processarFalhaEndereco(falha)
-        });
+    Object.assign(this.fornecedor.endereco, this.enderecoForm.getRawValue());
+
+    this.fornecedor.endereco.cep = StringUtils.somenteNumeros(this.fornecedor.endereco.cep);
+    this.fornecedor.endereco.fornecedorId = this.fornecedor.id;
+
+    this.fornecedorService.atualizarEndereco(this.fornecedor.endereco)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: sucesso => {
+          this.spinner.hide();
+          this.mudancasNaoSalvas = false;
+
+          this.processarSucessoEndereco(sucesso);
+        },
+        error: falha => {
+          this.spinner.hide();
+          this.processarFalhaEndereco(falha);
+        }
+      });
   }
 
   processarSucessoEndereco(endereco: Endereco): void {
-    this.enderecoForm.reset();
     this.errors = [];
 
     const toast = this.toastr.success(
@@ -316,7 +335,9 @@ export class EditarComponent implements OnInit, AfterViewInit  {
       { progressBar: true, closeButton: true }
     );
 
-    this.fornecedor.endereco = endereco
+    this.enderecoForm.patchValue(this.fornecedor.endereco);
+    this.enderecoForm.markAsPristine();
+
     this.modalService.dismissAll();
   }
 
@@ -330,7 +351,16 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     );
   }
 
-  abrirModal(content: any){
+  //Modal
+  abrirModal(content: any, event?: Event){
+    (event?.target as HTMLElement)?.blur();
+
+    this.fornecedor.endereco = this.fornecedor.endereco ?? {} as Endereco;
+    
+    this.enderecoForm.reset(this.fornecedor.endereco);
+    this.enderecoForm.markAsPristine();
+    this.enderecoForm.markAsUntouched();
+
     this.modalService.open(content);
   }
 }

@@ -31,7 +31,10 @@
 
                 <tr>
                   <td class="fw-semibold">{{ fornecedor.nome }}</td>
-                  <td>{{ fornecedor.documento }}</td>
+                  <td>{{ fornecedor.tipoFornecedor === 1
+                        ? (fornecedor.documento | cpf)
+                        : (fornecedor.documento | cnpj) }}
+                  </td>
 
                   <td class="text-center">
                     @if (fornecedor.ativo) {
@@ -73,7 +76,7 @@
       } @else {
         <div class="text-center p-4">
           <div class="spinner-border text-danger"></div>
-          <p class="mt-2">Carregando fornecedores...</p>
+          <p class="mt-2">Carregando Fornecedores...</p>
         </div>
       }
 

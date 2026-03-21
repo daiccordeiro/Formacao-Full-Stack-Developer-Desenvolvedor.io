@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { RouterLink } from '@angular/router';
 
+import { NgxBrazil } from 'ngx-brazil';
+
 import { FornecedorService } from '../services/fornecedor.service';
 import { Fornecedor } from '../models/fornecedor';
 
@@ -15,7 +17,8 @@ import { Fornecedor } from '../models/fornecedor';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    NgxBrazil
   ],
   templateUrl: './lista.component.html'
 })
