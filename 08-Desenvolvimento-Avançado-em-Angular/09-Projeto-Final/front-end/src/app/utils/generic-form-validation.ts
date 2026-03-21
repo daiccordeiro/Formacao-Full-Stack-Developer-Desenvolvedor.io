@@ -4,12 +4,14 @@ export class GenericValidator {
 
   constructor(private validationMessages: ValidationMessages) { }
 
-  processarMensagens(container: FormGroup): DisplayMessage {
+  processarMensagens(container: FormGroup | null): DisplayMessage {
     const messages: DisplayMessage  = {};
+    if (!container || !container.controls) return messages;
 
-      Object.keys(container.controls).forEach(controlKey => {
+    Object.keys(container.controls).forEach(controlKey => {
       const c: AbstractControl = container.controls[controlKey];
 
+      if (!c) return;
       if (c instanceof FormGroup) {
         const childMessages = this.processarMensagens(c);
         Object.assign(messages, childMessages);
@@ -29,7 +31,6 @@ export class GenericValidator {
         }
       }
     });
-
     return messages;
   }
 }

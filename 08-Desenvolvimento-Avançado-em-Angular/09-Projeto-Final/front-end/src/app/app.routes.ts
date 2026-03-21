@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { HomeComponent } from './navegacao/home/home.component';
 import { NotFoundComponent } from './navegacao/not-found/not-found.component';
+import { AcessoNegadoComponent } from './navegacao/acesso-negado/acesso-negado.component';
 
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
           import('./fornecedor/fornecedor.route').then(m => m.FORNECEDOR_ROUTES)
     }, //Lazy Loading
 
+    { path: 'acesso-negado', component: AcessoNegadoComponent },
     { path: 'nao-encontrado', component: NotFoundComponent },
     { path: '**', component: NotFoundComponent },
 ];
