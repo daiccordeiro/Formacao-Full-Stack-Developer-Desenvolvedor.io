@@ -40,16 +40,11 @@ export const fornecedorGuard: CanActivateFn = (
       return false;
     }
 
-    const userClaim = user.claims.find((x: any) => x.type === claim.nome);
+    const possuiClaim = user.claims.some(
+      (x: any) => x.type === claim.nome && x.value === claim.valor
+    );
 
-    if (!userClaim) {
-      navegarAcessoNegado(router);
-      return false;
-    }
-
-    const valoresClaim = userClaim.value as string;
-
-    if (!valoresClaim.includes(claim.valor)) {
+    if (!possuiClaim) {
       navegarAcessoNegado(router);
       return false;
     }

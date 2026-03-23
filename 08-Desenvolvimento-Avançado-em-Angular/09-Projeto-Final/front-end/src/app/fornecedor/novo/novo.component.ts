@@ -208,7 +208,7 @@ export class NovoComponent implements OnInit, AfterViewInit  {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: sucesso => {
-            this.mudancasNaoSalvas = false;
+            //this.mudancasNaoSalvas = false;
             this.processarSucesso(sucesso);
           },
           error: falha => this.processarFalha(falha)
@@ -219,6 +219,8 @@ export class NovoComponent implements OnInit, AfterViewInit  {
     this.fornecedorForm.reset();
     this.errors = [];
 
+    this.mudancasNaoSalvas = false;
+    
     const toast = this.toastr.success(
       'Fornecedor cadastrado com sucesso!',
       'Sucesso!',
