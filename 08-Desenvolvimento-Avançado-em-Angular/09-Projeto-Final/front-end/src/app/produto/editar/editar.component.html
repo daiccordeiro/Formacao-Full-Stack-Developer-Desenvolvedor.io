@@ -1,0 +1,108 @@
+<div class="container main-container">
+
+  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="pacman" [fullScreen]="true">
+    <p style="color: white"> Processando... </p>
+  </ngx-spinner>
+
+  <div class="card shadow-sm mb-4">
+
+    <div class="card-header tema-produto">
+      <h4 class="mb-0">Editar Fornecedor: {{ produto.nome }}</h4>
+    </div>
+
+    <div class="card-body">
+      <form novalidate (ngSubmit)="editarProduto()" [formGroup]="produtoForm">
+
+        @if (errors.length > 0) {
+          <div class="alert alert-danger">
+             <h5>Algo deu errado:</h5>
+            <ul>
+              @for (error of errors; track $index) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label">Fornecedor</label>
+          <select class="form-select" id="fornecedorId" formControlName="fornecedorId" [ngClass]="{'is-invalid': displayMessage['fornecedorId']}">
+            <option value="">Selecione um fornecedor</option>
+            @for (fornecedor of fornecedores; track fornecedor.id) {
+              <option [value]="fornecedor.id"> {{ fornecedor.nome }} </option>
+            }
+          </select>
+
+          @if (displayMessage['fornecedorId']) {
+            <div class="text-danger small">
+              {{ displayMessage['fornecedorId'] }}
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Nome</label>
+          <input class="form-control" id="nome" type="text" formControlName="nome" placeholder="Nome (requerido)" [ngClass]="{'is-invalid': displayMessage['nome']}" />
+
+          @if (displayMessage['nome']) {
+            <div class="text-danger small">
+              {{ displayMessage['nome'] }}
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Descrição</label>
+          <textarea class="form-control" rows="5" maxlength="1000" formControlName="descricao" placeholder="Descrição (requerido)" [ngClass]="{'is-invalid': displayMessage['descricao']}"></textarea>
+
+          @if (displayMessage['descricao']) {
+            <div class="text-danger small">
+              {{ displayMessage['descricao'] }}
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Imagem do Produto</label>
+          <input class="form-control" id="imagem" type="file" formControlName="imagem" (change)="onFileSelected($event)" [ngClass]="{'is-invalid': displayMessage['imagem']}" />
+
+          @if (displayMessage['imagem']) {
+            <div class="text-danger small">
+              {{ displayMessage['imagem'] }}
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Valor</label>
+          <input class="form-control" id="valor" type="text" placeholder="Valor (requerido)" formControlName="valor" [ngClass]="{'is-invalid': displayMessage['valor']}"
+            [textMask]="{mask: MASKS['number'].textMask}" />
+
+          @if (displayMessage['valor']) {
+            <div class="text-danger small">
+              {{ displayMessage['valor'] }}
+            </div>
+          }
+        </div>
+
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" id="ativo" formControlName="ativo">
+          <label class="form-check-label">Ativo</label>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-produto" [disabled]="produtoForm.invalid">
+            <i class="fas fa-save me-1"></i>
+              Salvar Alterações
+          </button>
+          <a class="btn btn-outline-secondary"
+            [routerLink]="[ '/produtos/listar-todos']">
+            <i class="fas fa-arrow-left me-1"></i>
+              Voltar
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

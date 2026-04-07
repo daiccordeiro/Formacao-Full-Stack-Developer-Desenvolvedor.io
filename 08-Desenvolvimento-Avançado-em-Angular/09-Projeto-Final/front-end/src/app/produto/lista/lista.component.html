@@ -1,0 +1,92 @@
+<div class="container main-container mt-4">
+  <div class="card shadow-sm">
+
+    <div class="card-header tema-produto d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Lista de Produtos</h4>
+
+      <a class="btn btn-light btn-sm" [routerLink]="['/produtos/adicionar-novo']">
+        <i class="fas fa-plus me-1"></i>
+          Novo Fornecedor
+      </a>
+    </div>
+
+    <div class="card-body">
+      @if (produto$ | async; as produtos) {
+
+        @if (produtos.length > 0) {
+
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 80px;"></th>
+                <th>Nome</th>
+                <th>Fornecedor</th>
+                <th>Valor</th>
+                <th class="text-center">Ativo</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (produto of produtos; track produto.id) {
+
+                <tr>
+                  <td>
+                    <img [src]="produto.imagem" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;">
+                  </td>
+
+                  <td class="fw-semibold">
+                    {{ produto.nome }}
+                  </td>
+                  <td>
+                    {{ produto.nomeFornecedor }}
+                  </td>
+                  <td>
+                    {{ produto.valor | currencyBrazil }}
+                  </td>
+
+                  <td class="text-center">
+                        @if (produto.ativo) {
+                          <span class="badge bg-success">Ativo</span>
+                        } @else {
+                          <span class="badge bg-secondary">Inativo</span>
+                        }
+                  </td>
+
+                  <td class="text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                      <a class="btn btn-outline-secondary btn-sm"
+                        [routerLink]="['/produtos/detalhes', produto.id]" title="Detalhes">
+                        <i class="fas fa-search"></i>
+                      </a>
+                      <a class="btn btn-outline-danger btn-sm"
+                        [routerLink]="['/produtos/editar', produto.id]" title="Editar">
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <a class="btn btn-produto btn-sm"
+                        [routerLink]="['/produtos/excluir', produto.id]" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+
+        } @else {
+          <div class="p-4 text-center text-muted">
+            Nenhum produto cadastrado.
+          </div>
+        }
+
+      } @else {
+        <div class="text-center p-4">
+          <div class="spinner-border spinner-border-sm"></div>
+          <p class="mt-2">Carregando Produtos...</p>
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

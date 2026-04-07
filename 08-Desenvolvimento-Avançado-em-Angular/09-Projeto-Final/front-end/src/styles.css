@@ -79,3 +79,20 @@ textarea {
   text-align: center;
   padding: 15px 0;
 }
+
+/* Menu-Produtos */
+.tema-produto {
+  background-color: #6f42c1;
+  color: #fff;
+}
+
+.btn-produto {
+  background-color: #6f42c1;
+  color: #fff;
+  border-color: #6f42c1;
+}
+
+.btn-produto:hover {
+  background-color: #5e35b1;
+  border-color: #59359c;
+}

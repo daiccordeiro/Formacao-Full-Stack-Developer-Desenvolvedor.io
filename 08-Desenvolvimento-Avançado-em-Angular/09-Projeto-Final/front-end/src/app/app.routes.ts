@@ -20,6 +20,11 @@ export const routes: Routes = [
           import('./fornecedor/fornecedor.route').then(m => m.FORNECEDOR_ROUTES)
     }, //Lazy Loading
 
+    { path: 'produtos',
+        loadChildren: () =>
+          import('./produto/produto.route').then(m => m.PRODUTO_ROUTES)
+    }, //Lazy Loading
+
     { path: 'acesso-negado', component: AcessoNegadoComponent },
     { path: 'nao-encontrado', component: NotFoundComponent },
     { path: '**', component: NotFoundComponent },
