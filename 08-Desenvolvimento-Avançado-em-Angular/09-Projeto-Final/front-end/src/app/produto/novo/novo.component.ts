@@ -11,9 +11,12 @@ import { NgxBrazil, NgxBrazilValidators, NgxBrazilMASKS } from 'ngx-brazil';
 
 import { DisplayMessage, GenericValidator, ValidationMessages } from '../../utils/generic-form-validation';
 import { CustomValidators } from '../../utils/custom-validators';
+import { CurrencyUtils } from '../../utils/currency-utils';
 
 import { Produto, Fornecedor } from '../models/produto';
 import { ProdutoService } from '../services/produto.service';
+
+import { ImageCropperComponent, ImageCroppedEvent, ImageTransform, Dimensions } from 'ngx-image-cropper';
 
 
 @Component({
@@ -23,7 +26,8 @@ import { ProdutoService } from '../services/produto.service';
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    NgxBrazil
+    NgxBrazil,
+    ImageCropperComponent
   ],
   templateUrl: './novo.component.html'
 })
@@ -38,6 +42,18 @@ export class NovoComponent implements OnInit, AfterViewInit  {
   @ViewChildren(FormControlName, { read: ElementRef })
     formInputElements!: QueryList<ElementRef>;
 
+  // Propriedades da imagem
+  imageChangedEvent: any = '';
+  croppedImage: string = '';
+  canvasRotation = 0;
+  rotation = 0;
+  scale = 1;
+  //showCropper = false;
+  containWithinAspectRatio = false;
+  transform: ImageTransform = {};
+  imageURL!: string;
+  imagemNome!: string;
+  //
 
   produtoForm!: FormGroup;
   produto = {} as Produto;
@@ -82,7 +98,7 @@ export class NovoComponent implements OnInit, AfterViewInit  {
       fornecedorId: ['', [Validators.required]],
       nome: ['', [Validators.required, CustomValidators.rangeLength(2,200)]],
       descricao: ['', [Validators.required, CustomValidators.rangeLength(2,1000)]],
-      imagem: ['', [Validators.required]],
+      //imagem: ['', [Validators.required]],
       valor: ['', [Validators.required]],
       ativo: [true]
     });
@@ -113,25 +129,27 @@ export class NovoComponent implements OnInit, AfterViewInit  {
     this.mudancasNaoSalvas = true;
   }
 
+  adicionarProduto(): void {
+    //if (!this.produtoForm.dirty || this.produtoForm.invalid) return;
+    if (!this.produtoForm.dirty) return;
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    if (!input.files || input.files.length === 0) {
+    // Valida imagem primeiro
+    if (!this.croppedImage) {
+      this.toastr.error('Selecione e recorte uma imagem antes de salvar');
       return;
     }
 
-    const file = input.files[0];
-    // Atualiza o formControl com o arquivo selecionado
-    this.produtoForm.patchValue({ imagem: file });
-    // Força validação
-    this.produtoForm.get('imagem')?.updateValueAndValidity();
-  }
+    if (this.produtoForm.invalid) return;
 
-  adicionarProduto(): void {
-    if (!this.produtoForm.dirty || this.produtoForm.invalid) return;
+    const produtoNovo: Produto = {
+      ...this.produtoForm.value
+    };
 
-    const produtoNovo: Produto = this.produtoForm.value;
+    // Adiciona imagem recortada
+    produtoNovo.imagemUpload = this.croppedImage.split(',')[1];
+    produtoNovo.imagem = this.imagemNome;
+
+    produtoNovo.valor = CurrencyUtils.stringParaDecimal(produtoNovo.valor);
 
     this.produtoService.novoProduto(produtoNovo)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -141,7 +159,7 @@ export class NovoComponent implements OnInit, AfterViewInit  {
           this.processarSucesso(sucesso);
         },
         error: falha => this.processarFalha(falha)
-      })
+    });
   }
 
   processarSucesso(response: any): void {
@@ -167,5 +185,38 @@ export class NovoComponent implements OnInit, AfterViewInit  {
       'Erro',
       { progressBar: true, closeButton: true }
     );
+  }
+
+  //Métodos para subir e editar as imagens
+  fileChangeEvent(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    this.imagemNome = file.name;
+    this.croppedImage = '';
+    this.imageChangedEvent = file;
+
+    // permite re-selecionar o mesmo arquivo
+    input.value = '';
+  }
+
+  imageCropped(event: ImageCroppedEvent): void {
+    if (event.base64) {
+      this.croppedImage = event.base64;
+      this.produtoForm.get('imagem')?.setValue('ok');
+    }
+  }
+
+  imageLoaded() {
+  }
+
+  cropperReady(sourceImageDimensions: Dimensions) {
+  }
+
+  loadImageFailed() {
+    this.errors.push('O formato do arquivo ' + this.imagemNome + ' não é aceito.');
   }
 }

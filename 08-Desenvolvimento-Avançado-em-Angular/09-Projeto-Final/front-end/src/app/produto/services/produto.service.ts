@@ -12,14 +12,13 @@ import { Produto, Fornecedor } from '../models/produto';
   providedIn: 'root'
 })
 export class ProdutoService extends BaseService {
-   private http = inject(HttpClient);
-
+  private http = inject(HttpClient);
 
 
   obterTodos(): Observable<Produto[]> {
     return this.http
       .get<Produto[]>(
-        `${this.UrlServiceV1}produtos`)
+        `${this.UrlServiceV1}produtos`, this.ObterAuthHeaderJson())
       .pipe(
         catchError(this.serviceError)
       );
