@@ -9,6 +9,7 @@ import { NgxBrazil } from 'ngx-brazil';
 
 import { ProdutoService } from '../services/produto.service';
 import { Produto } from '../models/produto';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -23,6 +24,8 @@ import { Produto } from '../models/produto';
   templateUrl: './lista.component.html'
 })
 export class ListaComponent {
+
+imagens: string = environment.imagensUrl;
 
 private produtoService = inject(ProdutoService);
   produto$: Observable<Produto[]> =

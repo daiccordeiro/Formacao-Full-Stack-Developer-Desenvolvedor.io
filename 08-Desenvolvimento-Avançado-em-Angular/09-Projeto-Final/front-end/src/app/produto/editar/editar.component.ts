@@ -15,6 +15,7 @@ import { CustomValidators } from '../../utils/custom-validators';
 
 import { Produto, Fornecedor } from '../models/produto';
 import { ProdutoService } from '../services/produto.service';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -30,6 +31,8 @@ import { ProdutoService } from '../services/produto.service';
   templateUrl: './editar.component.html'
 })
 export class EditarComponent implements OnInit, AfterViewInit  {
+
+  imagens: string = environment.imagensUrl;
 
   private fb = inject(FormBuilder);
   private produtoService = inject(ProdutoService);
@@ -156,7 +159,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     // Força validação
     this.produtoForm.get('imagem')?.updateValueAndValidity();
   }
-  
+
   editarProduto(): void {
     if (!this.produtoForm.dirty || this.produtoForm.invalid) return;
 

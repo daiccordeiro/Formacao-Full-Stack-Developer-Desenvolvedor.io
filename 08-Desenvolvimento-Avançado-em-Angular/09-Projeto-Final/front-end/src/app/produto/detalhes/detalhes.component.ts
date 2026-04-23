@@ -7,6 +7,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgxBrazil } from 'ngx-brazil';
 
 import { Produto } from '../models/produto';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { Produto } from '../models/produto';
   templateUrl: './detalhes.component.html'
 })
 export class DetalhesComponent {
+
+  imagens: string = environment.imagensUrl;
 
   private route = inject(ActivatedRoute);
 

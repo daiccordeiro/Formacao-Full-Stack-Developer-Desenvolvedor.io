@@ -11,6 +11,7 @@ import { NgxBrazil } from 'ngx-brazil';
 
 import { ProdutoService } from '../services/produto.service';
 import { Produto } from '../models/produto';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -25,6 +26,7 @@ import { Produto } from '../models/produto';
   templateUrl: './excluir.component.html'
 })
 export class ExcluirComponent {
+  imagens: string = environment.imagensUrl;
 
   private produtoService = inject(ProdutoService);
   private router = inject(Router);
@@ -35,6 +37,7 @@ export class ExcluirComponent {
     this.route.data.pipe(
       map(data => data['produto'])
   );
+  produto: any;
 
 
   excluirProduto(Produto: Produto): void {
