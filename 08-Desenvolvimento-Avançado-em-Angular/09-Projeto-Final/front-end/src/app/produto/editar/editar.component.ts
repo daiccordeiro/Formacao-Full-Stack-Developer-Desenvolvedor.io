@@ -12,6 +12,7 @@ import { NgxBrazil, NgxBrazilValidators, NgxBrazilMASKS } from 'ngx-brazil';
 
 import { DisplayMessage, GenericValidator, ValidationMessages } from '../../utils/generic-form-validation';
 import { CustomValidators } from '../../utils/custom-validators';
+import { CurrencyUtils } from '../../utils/currency-utils';
 
 import { Produto, Fornecedor } from '../models/produto';
 import { ProdutoService } from '../services/produto.service';
@@ -44,6 +45,13 @@ export class EditarComponent implements OnInit, AfterViewInit  {
 
   @ViewChildren(FormControlName, { read: ElementRef })
     formInputElements!: QueryList<ElementRef>;
+
+  // Propriedades da imagem
+  imageBase64: string | null = null;
+  imagemPreview: string | null = null;
+  imagemNome: string = '';
+  imagemOriginalSrc: string | null = null;
+  //
 
   produtoForm!: FormGroup;
   produto = {} as Produto;
@@ -112,8 +120,16 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     if (!produto) return;
 
     this.produtoForm.patchValue({
-      ...produto
+      fornecedorId: this.produto.fornecedorId,
+      id: this.produto.id,
+      nome: this.produto.nome,
+      descricao: this.produto.descricao,
+      ativo: this.produto.ativo,
+      valor: CurrencyUtils.decimalParaString(this.produto.valor)
     });
+
+    // utilizar o [src] na imagem para evitar que se perca após post
+    this.imagemOriginalSrc = this.imagens + this.produto.imagem;
   }
 
   ngAfterViewInit(): void {
@@ -146,26 +162,19 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     this.mudancasNaoSalvas = this.produtoForm.dirty;
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
-
-    const file = input.files[0];
-    // Atualiza o formControl com o arquivo selecionado
-    this.produtoForm.patchValue({ imagem: file });
-    // Força validação
-    this.produtoForm.get('imagem')?.updateValueAndValidity();
-  }
-
   editarProduto(): void {
     if (!this.produtoForm.dirty || this.produtoForm.invalid) return;
 
     this.spinner.show();
 
     Object.assign(this.produto, this.produtoForm.getRawValue());
+
+    if (this.imageBase64) {
+      this.produto.imagemUpload = this.imageBase64;
+      this.produto.imagem = this.imagemNome;
+    }
+
+    this.produto.valor = CurrencyUtils.stringParaDecimal(this.produto.valor);
 
     this.produtoService.atualizarProduto(this.produto)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -205,5 +214,21 @@ export class EditarComponent implements OnInit, AfterViewInit  {
       'Erro',
       { progressBar: true, closeButton: true }
     );
+  }
+
+
+  upload(files: FileList | null): void {
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    this.imagemNome = file.name;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageBase64 = reader.result as string;
+      this.imagemPreview = reader.result as string;
+    };
+
+    reader.readAsDataURL(file);
   }
 }
