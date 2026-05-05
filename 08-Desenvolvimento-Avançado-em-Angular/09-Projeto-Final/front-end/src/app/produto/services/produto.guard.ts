@@ -26,7 +26,9 @@ export const produtoGuard: CanActivateFn = (
   const router = inject(Router);
 
   if (!localStorageUtils.obterTokenUsuario()) {
-    router.navigate(['/conta/login']);
+    router.navigate(['/conta/login'], {
+      queryParams: { returnUrl: state.url }
+    });
     return false;
   }
 
