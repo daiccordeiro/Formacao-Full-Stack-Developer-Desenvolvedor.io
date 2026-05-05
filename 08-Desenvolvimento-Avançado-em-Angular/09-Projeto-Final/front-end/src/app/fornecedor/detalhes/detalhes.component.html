@@ -45,6 +45,8 @@
       </div>
     </div>
 
+    <lista-produto [produtos]="fornecedor.produtos"></lista-produto>
+
     <div class="d-flex gap-2">
       <a class="btn btn-danger"
         [routerLink]="['/fornecedores/editar', fornecedor.id]">

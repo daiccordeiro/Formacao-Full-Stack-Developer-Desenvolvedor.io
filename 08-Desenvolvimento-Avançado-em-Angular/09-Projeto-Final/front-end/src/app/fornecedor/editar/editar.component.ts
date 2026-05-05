@@ -17,6 +17,7 @@ import { DisplayMessage, GenericValidator, ValidationMessages } from '../../util
 
 import { Fornecedor } from '../models/fornecedor';
 import { FornecedorService } from '../services/fornecedor.service';
+import { ListaProdutosComponent } from "../produtos/lista-produtos.component";
 import { CepConsulta, Endereco } from '../models/endereco';
 
 
@@ -28,8 +29,9 @@ import { CepConsulta, Endereco } from '../models/endereco';
     ReactiveFormsModule,
     RouterLink,
     NgxBrazil,
-    NgxSpinnerModule
-  ],
+    NgxSpinnerModule,
+    ListaProdutosComponent
+],
   templateUrl: './editar.component.html'
 })
 export class EditarComponent implements OnInit, AfterViewInit  {
@@ -356,7 +358,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     (event?.target as HTMLElement)?.blur();
 
     this.fornecedor.endereco = this.fornecedor.endereco ?? {} as Endereco;
-    
+
     this.enderecoForm.reset(this.fornecedor.endereco);
     this.enderecoForm.markAsPristine();
     this.enderecoForm.markAsUntouched();

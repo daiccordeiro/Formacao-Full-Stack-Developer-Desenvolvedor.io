@@ -47,10 +47,10 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     formInputElements!: QueryList<ElementRef>;
 
   // Propriedades da imagem
-  imageBase64: string | null = null;
-  imagemPreview: string | null = null;
-  imagemNome: string = '';
-  imagemOriginalSrc: string | null = null;
+  imageBase64: any;
+  imagemPreview: any;
+  imagemNome!: string;
+  imagemOriginalSrc!: string;
   //
 
   produtoForm!: FormGroup;
@@ -76,7 +76,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
       minlength: 'Mínimo de 2 caracteres',
       maxlength: 'Máximo de 1000 caracteres'
     },
-    imagem: { required: 'Informe a Imagem' },
+    //imagem: { required: 'Informe a Imagem' },
     valor: { required: 'Informe o Valor' }
   };
   genericValidator = new GenericValidator(this.validationMessages);
@@ -109,7 +109,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
       fornecedorId: ['', [Validators.required]],
       nome: ['', [Validators.required, CustomValidators.rangeLength(2,200)]],
       descricao: ['', [Validators.required, CustomValidators.rangeLength(2,1000)]],
-      imagem: [''],
+      //imagem: [''],
       valor: ['', [Validators.required]],
       ativo: [0]
     });
@@ -129,7 +129,10 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     });
 
     // utilizar o [src] na imagem para evitar que se perca após post
-    this.imagemOriginalSrc = this.imagens + this.produto.imagem;
+    //this.imagemOriginalSrc = this.imagens + this.produto.imagem;
+    this.imagemOriginalSrc = this.produto.imagem
+      ? this.imagens + this.produto.imagem
+      : 'assets/sem-imagem.png';
   }
 
   ngAfterViewInit(): void {
@@ -169,7 +172,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
 
     Object.assign(this.produto, this.produtoForm.getRawValue());
 
-    if (this.imageBase64) {
+    if (this.imageBase64 && this.imagemNome) {
       this.produto.imagemUpload = this.imageBase64;
       this.produto.imagem = this.imagemNome;
     }
@@ -196,7 +199,7 @@ export class EditarComponent implements OnInit, AfterViewInit  {
     this.errors = [];
 
     const toast = this.toastr.success(
-      'Produto editado com sucesso!',
+      'Produto atualizado com sucesso!',
       'Sucesso!',
       { progressBar: true, closeButton: true }
     );
@@ -225,8 +228,10 @@ export class EditarComponent implements OnInit, AfterViewInit  {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.imageBase64 = reader.result as string;
-      this.imagemPreview = reader.result as string;
+      const base64 = reader.result as string;
+
+      this.imageBase64 = base64.split(',')[1];
+      this.imagemPreview = base64;
     };
 
     reader.readAsDataURL(file);

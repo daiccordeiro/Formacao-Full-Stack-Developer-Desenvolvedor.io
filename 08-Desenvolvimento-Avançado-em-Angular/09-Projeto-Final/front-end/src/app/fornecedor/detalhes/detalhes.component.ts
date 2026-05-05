@@ -8,6 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NgxBrazil } from 'ngx-brazil';
 
 import { Fornecedor } from '../models/fornecedor';
+import { ListaProdutosComponent } from "../produtos/lista-produtos.component";
 
 
 @Component({
@@ -16,8 +17,9 @@ import { Fornecedor } from '../models/fornecedor';
   imports: [
     CommonModule,
     RouterLink,
-    NgxBrazil
-  ],
+    NgxBrazil,
+    ListaProdutosComponent
+],
   templateUrl: './detalhes.component.html'
 })
 export class DetalhesComponent {

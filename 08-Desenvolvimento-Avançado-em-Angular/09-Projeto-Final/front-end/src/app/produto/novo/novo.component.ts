@@ -130,7 +130,6 @@ export class NovoComponent implements OnInit, AfterViewInit  {
   }
 
   adicionarProduto(): void {
-    //if (!this.produtoForm.dirty || this.produtoForm.invalid) return;
     if (!this.produtoForm.dirty) return;
 
     // Valida imagem primeiro

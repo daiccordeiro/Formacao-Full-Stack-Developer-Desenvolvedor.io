@@ -28,7 +28,6 @@ export class DetalhesComponent {
 
   readonly produto$: Observable<Produto> =
     this.route.data.pipe(
-      map(data => data['fornecedor'])
+      map(data => data['produto'])
   );
-
 }
